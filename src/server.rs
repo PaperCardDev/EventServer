@@ -40,17 +40,6 @@ pub struct BroadcastRequest {
     pub msg: String,
 }
 
-/// Join room, if room does not exists create new one.
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct Join {
-    /// Client ID
-    pub id: usize,
-
-    /// Room name
-    pub name: String,
-}
-
 #[derive(Debug)]
 struct Client {
     cliend_id: String,
@@ -121,7 +110,7 @@ impl Handler<Connect> for EventServer {
             "client_id": msg.cliend_id,
             "time": SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs()
         });
-        
+
         let e = serde_json::to_string(&e);
         let e = e.unwrap();
         let e = e.as_ref();

@@ -132,7 +132,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
     })
     // .workers(2)
-    .bind(("0.0.0.0", 8080))?
+    .bind(("0.0.0.0", 7373))?
     .run()
     .await
 }
