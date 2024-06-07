@@ -107,7 +107,7 @@ impl Handler<Connect> for EventServer {
 
         let e = json!({
             "type": "connect",
-            "client_id": msg.cliend_id,
+            "sender_id": msg.cliend_id,
             "time": SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs()
         });
 
@@ -136,7 +136,7 @@ impl Handler<Disconnect> for EventServer {
             // 播报
             let e = json!({
                 "type": "disconnect",
-                "client_id": session.cliend_id,
+                "sender_id": session.cliend_id,
                 "time": SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs()
             });
             let e = serde_json::to_string(&e);
@@ -175,24 +175,14 @@ impl Handler<BroadcastRequest> for EventServer {
                 let o = json.as_object_mut();
 
                 if let Some(o) = o {
+                    // 添加一个字段，sender_id
                     o.insert(
-                        "client_id".to_owned(),
+                        "sender_id".to_owned(),
                         serde_json::Value::String(session.cliend_id.clone()),
                     );
 
                     // 发送给所有客户端
-
-                    let res = serde_json::to_string(&json);
-
-                    match res {
-                        Ok(res) => {
-                            self.broadcast(res.as_str(), msg.id);
-                        }
-
-                        Err(e) => {
-                            println!("json序列化失败: {}", e);
-                        }
-                    }
+                    self.broadcast(json.to_string().as_str(), msg.id);
                 }
             }
 

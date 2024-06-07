@@ -120,10 +120,10 @@ async fn ws_route(
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    // start chat server actor
+    // 启动事件服务器
     let server = server::EventServer::new().start();
 
-    log::info!("starting HTTP server at http://localhost:8080");
+    log::info!("starting HTTP server at http://localhost:7373");
 
     HttpServer::new(move || {
         App::new()
